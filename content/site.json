@@ -1,0 +1,118 @@
+{
+  "title": "RouteRLT",
+  "fullTitle": "Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation",
+  "subtitle": "Generalists Act, Specialists Intervene: Modular Stage-Selective RL for VLA Manipulation",
+  "venue": "arXiv 2026 · IROS 2026 IARL Workshop",
+  "secondaryVenue": "Extended version of our IROS 2026 IARL Workshop paper.",
+  "authors": [
+    {"name": "Chongyu Zhu", "url": "https://chongyuzhu.com/"},
+    {"name": "Hyegang Kim", "url": "https://scholar.google.com/citations?user=_ZH58tUAAAAJ&hl=en"},
+    {"name": "Jaden Hinds", "url": "https://scholar.google.com/citations?user=9BpkYWYAAAAJ&hl=en"},
+    {"name": "Juan Sebastian Rojas", "url": "https://scholar.google.com/citations?user=jrWXzhMAAAAJ&hl=en"},
+    {"name": "Ramy Elmallah", "url": "https://scholar.google.com/citations?user=34LmEvEAAAAJ&hl=en"},
+    {"name": "Chi-Guhn Lee", "url": "https://scholar.google.com/citations?user=ZpALG2AAAAAJ&hl=en"}
+  ],
+  "affiliations": [
+    "Department of Mechanical & Industrial Engineering, University of Toronto"
+  ],
+  "links": {
+    "paper": "https://arxiv.org/abs/2609.26467",
+    "pdf": "https://arxiv.org/pdf/2609.26467",
+    "homepage": "https://chongyuzhu.com/"
+  },
+  "tldr": "Keep the generalist VLA frozen for broad manipulation; let a learned GRU phase coordinator hand control to lightweight RL specialists right when millimeter-level precision matters.",
+  "abstract": "Vision-language-action (VLA) models often struggle in the precision-critical phases of multi-stage manipulation tasks. To mitigate this issue, VLA models can be used in conjunction with reinforcement learning (RL) specialists that are specifically trained to handle the precision-critical phases. However, the coordination between the base VLA model and the RL specialists, which dictates when a specialist should take over from the base VLA and vice-versa, remains an open research question. In this paper, we address this gap by introducing RouteRLT, a modular framework that coordinates a generalist VLA, used as the default controller, with designated precision-critical RL specialists. At a high level, our framework trains a phase-aware coordination mechanism that handles handoffs between the generalist and the specialists. We evaluate RouteRLT on the LIBERO and LIBERO-Plus benchmarks, as well as on a physical connector pickup and insertion task. Overall, we find that RouteRLT improves success on LIBERO, and retains net gains on LIBERO-Plus. On the physical task, RouteRLT completes 65.7% of trials, compared with 8.6% for the baseline. Altogether, these results demonstrate that learned coordination builds on generalist VLA capabilities to improve task completion in precision-critical manipulation.",
+  "realRobot": {
+    "video": "assets/media/real_robot_demo.mp4",
+    "poster": "assets/media/real_robot_poster.jpg",
+    "alt": "Four-view real-robot demonstration of RouteRLT autonomously picking up a connector and inserting it into a 1 mm clearance port.",
+    "caption": "Trossen Stationary AI · 1× speed · Autonomous Generalist ↔ Pickup RL ↔ Insertion RL handoffs (1 mm port clearance).",
+    "stats": [
+      {"value": "65.7%", "label": "Full-task success (23/35 vs. 3/35 Base)"},
+      {"value": "+57.1 pp", "label": "Over frozen SmolVLA (8.6%)"},
+      {"value": "85.2%", "label": "Insertion given Pickup (23/27 vs. 3/20)"}
+    ]
+  },
+  "reentryReal": {
+    "badge": "Real Robot · Autonomous Re-entry (Trial 017)",
+    "title": "Re-entrant Pickup & Insertion on Hardware",
+    "caption": "Raw 3-camera recording (Top, Front, Wrist · 2× playback): Pickup RL autonomously re-enters after an initial attempt, hands back to Generalist, then Insertion RL seats the connector.",
+    "views": [
+      {"label": "Top", "src": "assets/media/r13_017_top.mp4", "poster": "assets/media/r13_017_top_poster.jpg"},
+      {"label": "Front", "src": "assets/media/r13_017_front.mp4", "poster": "assets/media/r13_017_front_poster.jpg"},
+      {"label": "Wrist", "src": "assets/media/r13_017_wrist.mp4", "poster": "assets/media/r13_017_wrist_poster.jpg"}
+    ]
+  },
+  "reentrySim": {
+    "badge": "Simulation · LIBERO Long",
+    "title": "Multi-Object Reuse & Drop Recovery",
+    "caption": "Dual-camera replay showing live BASE ↔ PICKUP ownership: one Pickup specialist handles multiple objects and re-enters after a mid-task drop.",
+    "src": "assets/media/libero_long_reentry.mp4",
+    "poster": "assets/media/libero_reentry_poster.jpg",
+    "alt": "Dual-camera LIBERO Long simulation video showing live BASE and PICKUP handoffs and re-entry after drop."
+  },
+  "liberoPlus": [
+    {
+      "id": "plus-bg",
+      "badge": "Background Textures · Zero Retraining",
+      "title": "LIBERO-Plus Long — Unseen Tabletop Texture",
+      "caption": "Same Pickup specialist coordinates repeated pickups under unseen background textures.",
+      "base": {"label": "SmolVLA (Base)", "src": "assets/media/plus_bg_base.mp4", "poster": "assets/media/plus_bg_base_poster.jpg"},
+      "method": {"label": "SmolVLA + RouteRLT", "src": "assets/media/plus_bg_method.mp4", "poster": "assets/media/plus_bg_method_poster.jpg"}
+    },
+    {
+      "id": "plus-light",
+      "badge": "Lighting Conditions · Zero Retraining",
+      "title": "LIBERO-Plus Long — Lighting Shift",
+      "caption": "Phase-aware handoffs remain reliable under strong lighting shifts without retraining.",
+      "base": {"label": "SmolVLA (Base)", "src": "assets/media/plus_light_base.mp4", "poster": "assets/media/plus_light_base_poster.jpg"},
+      "method": {"label": "SmolVLA + RouteRLT", "src": "assets/media/plus_light_method.mp4", "poster": "assets/media/plus_light_method_poster.jpg"}
+    }
+  ],
+  "method": {
+    "overviewFigure": {
+      "src": "assets/media/routerlt_overview.png",
+      "alt": "RouteRLT architecture: frozen VLA backbone, RLT readout adapter, GRU phase selector, re-entrant stabilizer, controller bank, and immediate action-boundary flush.",
+      "caption": "Frozen VLA + compact readout adapter → GRU phase selector & re-entrant stabilizer → immediate action-queue flush on switch."
+    }
+  },
+  "results": {
+    "hardwareFigure": {
+      "src": "assets/media/hardware_results.png",
+      "alt": "Real-robot success rates and cumulative completion curves over 60 seconds comparing SmolVLA and SmolVLA + RouteRLT.",
+      "caption": "Physical connector pickup & insertion over 35 trials (60 s budget): 65.7% vs. 8.6% overall, and 14 vs. 2 completed within 30 s."
+    },
+    "keyTable": {
+      "columns": ["Benchmark (SmolVLA)", "Specialists", "Episodes", "Base SR", "RouteRLT SR", "ΔS2S", "Rec. / Reg."],
+      "rows": [
+        ["LIBERO Object", "Pickup", "100", "93.00%", "**98.00%**", "-1.51", "5 / 0"],
+        ["LIBERO Long", "Pickup (reused)", "30", "56.67%", "**70.00%**", "-10.38", "5 / 1"],
+        ["LIBERO Spatial", "Pickup + Place", "100", "91.00%", "**94.00%**", "+1.62", "3 / 0"],
+        ["LIBERO-Plus Object", "Pickup (0-shot)", "2,357", "44.17%", "**47.94%**", "-1.77", "226 / 137"],
+        ["LIBERO-Plus Long", "Pickup (0-shot)", "570", "21.40%", "**25.44%**", "-6.10", "41 / 18"],
+        ["LIBERO-Plus Spatial", "Pickup + Place (0-shot)", "2,274", "40.24%", "**43.76%**", "-2.25", "172 / 92"]
+      ]
+    },
+    "backbonesTable": {
+      "columns": ["Backbone (d_b / C)", "Suite", "Base SR", "RouteRLT SR", "ΔS2S", "Rec. / Reg."],
+      "rows": [
+        ["SmolVLA (960 / 10)", "Object / Long", "93.0 / 56.7%", "**98.0 / 70.0%**", "-1.51 / -10.38", "5/0 · 5/1"],
+        ["X-VLA (1024 / 30)", "Object / Long", "99.0 / **86.7%**", "**100.0** / 83.3%", "+4.23 / +10.83", "1/0 · 2/3"],
+        ["π₀ (2048 / 5)", "Object / Long", "97.0 / **93.3%**", "**99.0** / 90.0%", "-0.40 / +5.44", "2/0 · 2/3"],
+        ["VLA-JEPA (2048 / 7)", "Object / Long", "**100.0 / 100.0%**", "**100.0 / 100.0%**", "-1.56 / +1.24", "0/0 · 0/0"],
+        ["OpenVLA-OFTₘ (4096 / 8)", "Object / Long", "97.0 / **96.7%**", "**99.0 / 96.7%**", "+0.38 / -0.38", "2/0 · 0/0"]
+      ]
+    },
+    "ablationsTable": {
+      "columns": ["Variant (SmolVLA Object + Long)", "Combined SR", "ΔS2S", "Rec. / Reg."],
+      "rows": [
+        ["SmolVLA Base", "84.62%", "—", "—"],
+        ["**RouteRLT (GRU + immediate flush + image & lang)**", "**91.54%**", "-3.55", "10 / 1"],
+        ["Rule-window (privileged geometry)", "86.92%", "-0.78", "8 / 5"],
+        ["Chunk-boundary handoff (deferred)", "86.15%", "-3.31", "6 / 4"],
+        ["Image-only representation (no language tokens)", "85.38%", "-0.22", "7 / 6"]
+      ]
+    }
+  },
+  "bibtex": "@misc{zhu2026routerlt,\n  title = {Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation},\n  author = {Chongyu Zhu and Hyegang Kim and Jaden Hinds and Juan Sebastian Rojas and Ramy Elmallah and Chi-Guhn Lee},\n  year = {2026},\n  eprint = {2609.26467},\n  archivePrefix = {arXiv},\n  primaryClass = {cs.RO},\n  url = {https://arxiv.org/abs/2609.26467}\n}"
+}

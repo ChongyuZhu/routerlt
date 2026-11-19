@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RouteRLT: Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation</title>
+  <meta name="description" content="Keep the generalist VLA frozen for broad manipulation; let a learned GRU phase coordinator hand control to lightweight RL specialists right when millimeter-level precision matters.">
+  <meta name="theme-color" content="#f8f7f3">
+  <meta property="og:title" content="RouteRLT: Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation">
+  <meta property="og:description" content="Keep the generalist VLA frozen for broad manipulation; let a learned GRU phase coordinator hand control to lightweight RL specialists right when millimeter-level precision matters.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="header shell">
+    <a class="wordmark" href="#top" aria-label="RouteRLT, top of page">
+      <svg viewBox="0 0 42 28" aria-hidden="true">
+        <path d="M3 21h12c5 0 7-14 14-14h10" stroke="var(--emerald)" stroke-width="3.4"/>
+        <path d="M3 21h36" stroke="var(--slate-line)" stroke-width="2.4" stroke-dasharray="3 5"/>
+        <circle cx="15" cy="21" r="4" fill="var(--amber)" stroke="var(--paper)" stroke-width="1.5"/>
+      </svg>
+      RouteRLT<span class="wordmark-dot">.</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#how-it-works">Animation</a>
+      <a href="#real-robot">Real Robot</a>
+      <a href="#reentry">Re-entry</a>
+      <a href="#libero-plus">LIBERO-Plus</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#citation">BibTeX</a>
+      <a href="https://arxiv.org/abs/2609.26467" target="_blank" rel="noopener">arXiv ↗</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- HERO + INTERACTIVE CARTOON ANIMATION RIGHT AT TOP -->
+    <section class="hero shell" id="top" aria-labelledby="project-title">
+      <p class="venue"><span aria-hidden="true"></span>arXiv 2026 · IROS 2026 IARL Workshop</p>
+      <h1 id="project-title">RouteRLT</h1>
+      <p class="subtitle">Generalists Act, Specialists Intervene: Modular Stage-Selective RL for VLA Manipulation</p>
+      <p class="authors"><a href="https://chongyuzhu.com/" target="_blank" rel="noopener">Chongyu Zhu</a> <a href="https://scholar.google.com/citations?user=_ZH58tUAAAAJ&amp;hl=en" target="_blank" rel="noopener">Hyegang Kim</a> <a href="https://scholar.google.com/citations?user=9BpkYWYAAAAJ&amp;hl=en" target="_blank" rel="noopener">Jaden Hinds</a> <a href="https://scholar.google.com/citations?user=jrWXzhMAAAAJ&amp;hl=en" target="_blank" rel="noopener">Juan Sebastian Rojas</a> <a href="https://scholar.google.com/citations?user=34LmEvEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Ramy Elmallah</a> <a href="https://scholar.google.com/citations?user=ZpALG2AAAAAJ&amp;hl=en" target="_blank" rel="noopener">Chi-Guhn Lee</a></p>
+      <p class="affiliations">Department of Mechanical &amp; Industrial Engineering, University of Toronto</p>
+      <div class="hero-links">
+        <a class="button primary" href="https://arxiv.org/abs/2609.26467" target="_blank" rel="noopener">Paper (arXiv) <span aria-hidden="true">↗</span></a>
+        <a class="button" href="https://arxiv.org/pdf/2609.26467" target="_blank" rel="noopener">PDF <span aria-hidden="true">↗</span></a>
+        <a class="button" href="#citation">BibTeX <span aria-hidden="true">↓</span></a>
+      </div>
+      <p class="secondary-venue">Extended version of our IROS 2026 IARL Workshop paper.</p>
+
+      <p class="tldr-bar"><strong>TL;DR</strong> Keep the generalist VLA frozen for broad manipulation; let a learned GRU phase coordinator hand control to lightweight RL specialists right when millimeter-level precision matters.</p>
+
+      <!-- INTERACTIVE CARTOON ANIMATION -->
+      <div class="anim-card" id="how-it-works" aria-label="Interactive cartoon explainer">
+        <div class="anim-toolbar">
+          <div class="mode-switch" role="group" aria-label="Comparison mode">
+            <button type="button" class="mode-btn is-active" data-mode="routerlt" aria-pressed="true">
+              <span class="dot dot-emerald"></span>RouteRLT (Generalist + Specialists)
+            </button>
+            <button type="button" class="mode-btn" data-mode="base" aria-pressed="false">
+              <span class="dot dot-slate"></span>Base VLA Alone
+            </button>
+          </div>
+          <div class="playback-controls">
+            <button type="button" class="ctrl-btn" id="anim-play-btn" aria-label="Pause animation">Pause</button>
+            <button type="button" class="ctrl-btn" id="anim-replay-btn" aria-label="Replay from start">Replay</button>
+          </div>
+        </div>
+
+        <div class="anim-stage-wrap">
+          <svg id="routerlt-cartoon" viewBox="0 0 960 470" role="img" aria-label="Interactive cartoon animation showing how RouteRLT coordinates a frozen generalist VLA with Pickup and Insertion RL specialists.">
+            <defs>
+              <linearGradient id="wood-top" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f3d5ae"/>
+                <stop offset="100%" stop-color="#e3ba85"/>
+              </linearGradient>
+              <linearGradient id="wood-edge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d2a46c"/>
+                <stop offset="100%" stop-color="#be8e54"/>
+              </linearGradient>
+              <linearGradient id="arm-link" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#e6ebe7"/>
+              </linearGradient>
+              <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="125%">
+                <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#1e2f2a" flood-opacity="0.10"/>
+              </filter>
+            </defs>
+
+            <rect width="960" height="470" fill="#fbfaf6"/>
+            <g stroke="#e6e7df" stroke-width="1" opacity="0.55">
+              <line x1="0" y1="126" x2="960" y2="126"/>
+              <line x1="0" y1="240" x2="960" y2="240"/>
+              <line x1="0" y1="350" x2="960" y2="350"/>
+              <line x1="240" y1="0" x2="240" y2="386"/>
+              <line x1="480" y1="0" x2="480" y2="386"/>
+              <line x1="720" y1="0" x2="720" y2="386"/>
+            </g>
+
+            <!-- TOP CONTROL ARCHITECTURE HUD -->
+            <path id="wire-vla" d="M 318 62 C 282 62, 266 62, 236 62" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="6 5"/>
+            <path id="wire-pickup" d="M 556 52 C 588 52, 594 44, 622 44" fill="none" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="6 5"/>
+            <path id="wire-insert" d="M 556 72 C 588 72, 594 84, 622 84" fill="none" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="6 5"/>
+
+            <g id="node-vla" transform="translate(36, 26)" filter="url(#soft-shadow)">
+              <rect width="200" height="72" rx="14" fill="#ffffff" stroke="#64748b" stroke-width="2.5"/>
+              <circle cx="30" cy="36" r="17" fill="#eef2f6" stroke="#64748b" stroke-width="2"/>
+              <rect x="23" y="34" width="14" height="11" rx="2.5" fill="#475569"/>
+              <path d="M26 34v-4a4 4 0 0 1 8 0v4" fill="none" stroke="#475569" stroke-width="2"/>
+              <text x="56" y="31" font-size="13" font-weight="700" fill="#1e293b">Generalist VLA</text>
+              <text x="56" y="48" font-size="10.5" fill="#64748b">Frozen default (π_VLA)</text>
+              <rect id="badge-vla-active" x="56" y="54" width="62" height="12" rx="6" fill="#475569" opacity="1"/>
+              <text id="badge-vla-text" x="87" y="63" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffffff">ACTIVE</text>
+            </g>
+
+            <g id="node-gru" transform="translate(318, 22)" filter="url(#soft-shadow)">
+              <rect width="238" height="80" rx="16" fill="#fffaf2" stroke="#d98218" stroke-width="2.2"/>
+              <g id="gru-beacon" transform="translate(32, 40)">
+                <circle id="gru-pulse" cx="0" cy="0" r="16" fill="#f59e0b" opacity="0.22"/>
+                <circle cx="0" cy="0" r="11" fill="#d98218" stroke="#fff7ed" stroke-width="2.5"/>
+                <circle cx="-3" cy="-3" r="3" fill="#fde68a"/>
+              </g>
+              <text x="56" y="31" font-size="12.5" font-weight="700" fill="#92400e">GRU Phase Coordinator</text>
+              <text id="gru-subtext" x="56" y="48" font-size="10" fill="#b45309">Monitoring state z_t</text>
+              <rect x="56" y="57" width="164" height="10" rx="5" fill="#f3e5d0"/>
+              <rect id="gru-bar" x="56" y="57" width="42" height="10" rx="5" fill="#d98218"/>
+            </g>
+
+            <g id="node-pickup" transform="translate(622, 16)" filter="url(#soft-shadow)">
+              <rect width="152" height="52" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <circle cx="24" cy="26" r="13" fill="#e8f5ee" stroke="#2b7a52" stroke-width="1.8"/>
+              <path d="M19 20v6l-3 5M29 20v6l3 5M19 22h10" fill="none" stroke="#2b7a52" stroke-width="2" stroke-linecap="round"/>
+              <text x="44" y="24" font-size="11.5" font-weight="700" fill="#1e293b">Pickup RL</text>
+              <text x="44" y="38" font-size="9.5" fill="#64748b">Precision grasp (π₁)</text>
+            </g>
+
+            <g id="node-insert" transform="translate(622, 74)" filter="url(#soft-shadow)">
+              <rect width="152" height="52" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <circle cx="24" cy="26" r="13" fill="#f3ecf6" stroke="#7a5386" stroke-width="1.8"/>
+              <rect x="17" y="21" width="9" height="10" rx="2" fill="#7a5386"/>
+              <path d="M26 26h6" stroke="#7a5386" stroke-width="2.5" stroke-linecap="round"/>
+              <text x="44" y="24" font-size="11.5" font-weight="700" fill="#1e293b">Insertion RL</text>
+              <text x="44" y="38" font-size="9.5" fill="#64748b">1 mm alignment (π₂)</text>
+            </g>
+
+            <g id="queue-hud" transform="translate(794, 22)" filter="url(#soft-shadow)">
+              <rect width="136" height="96" rx="12" fill="#ffffff" stroke="#d6d8ce" stroke-width="1.8"/>
+              <text x="68" y="20" text-anchor="middle" font-size="9.5" font-weight="700" fill="#475569" letter-spacing="0.4">ACTION QUEUE</text>
+              <g id="queue-slots" transform="translate(14, 30)">
+                <rect id="q-slot-0" x="0" y="0" width="24" height="24" rx="5" fill="#475569"/>
+                <text id="q-text-0" x="12" y="15.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">a₁</text>
+                <rect id="q-slot-1" x="28" y="0" width="24" height="24" rx="5" fill="#cbd5e1"/>
+                <text id="q-text-1" x="40" y="15.5" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">a₂</text>
+                <rect id="q-slot-2" x="56" y="0" width="24" height="24" rx="5" fill="#cbd5e1"/>
+                <text id="q-text-2" x="68" y="15.5" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">a₃</text>
+                <rect id="q-slot-3" x="84" y="0" width="24" height="24" rx="5" fill="#cbd5e1"/>
+                <text id="q-text-3" x="96" y="15.5" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">a₄</text>
+              </g>
+              <text id="queue-status" x="68" y="75" text-anchor="middle" font-size="9.5" font-weight="600" fill="#64748b">Streaming VLA chunk</text>
+              <text id="queue-sub" x="68" y="88" text-anchor="middle" font-size="8.5" fill="#94a3b8">Clear on switch</text>
+            </g>
+
+            <!-- WORKBENCH SCENE (Left: Robot Base | Center: Connector Init | Right: Female Port -> natural left-to-right, zero singularity!) -->
+            <rect x="0" y="388" width="960" height="22" fill="url(#wood-top)"/>
+            <rect x="0" y="410" width="960" height="60" fill="url(#wood-edge)"/>
+            <line x1="0" y1="388" x2="960" y2="388" stroke="#c89a61" stroke-width="2"/>
+
+            <g id="zone-pickup" opacity="0.28">
+              <ellipse cx="460" cy="390" rx="64" ry="11" fill="#2b7a52" opacity="0.22"/>
+              <rect x="406" y="328" width="108" height="60" rx="10" fill="#2b7a52" fill-opacity="0.06" stroke="#2b7a52" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <rect x="408" y="416" width="104" height="20" rx="10" fill="#2b7a52"/>
+              <text x="460" y="429.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff" letter-spacing="0.6">PICKUP ZONE</text>
+            </g>
+            <g id="zone-insert" opacity="0.28">
+              <ellipse cx="716" cy="390" rx="70" ry="11" fill="#7a5386" opacity="0.22"/>
+              <rect x="652" y="294" width="128" height="94" rx="10" fill="#7a5386" fill-opacity="0.06" stroke="#7a5386" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <rect x="654" y="416" width="124" height="20" rx="10" fill="#7a5386"/>
+              <text x="716" y="429.5" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff" letter-spacing="0.6">1 mm PORT ZONE</text>
+            </g>
+
+            <!-- Female Port Fixture (Right side of workbench, socket opens leftward) -->
+            <g id="port-fixture" transform="translate(700, 312)" filter="url(#soft-shadow)">
+              <rect x="18" y="48" width="52" height="28" rx="4" fill="#475569"/>
+              <rect x="10" y="70" width="68" height="7" rx="3" fill="#334155"/>
+              <rect x="14" y="0" width="60" height="54" rx="8" fill="#f5f4ee" stroke="#94a3b8" stroke-width="2"/>
+              <rect x="14" y="16" width="22" height="22" rx="3" fill="#27323b"/>
+              <rect x="14" y="12" width="10" height="6" rx="1.5" fill="#27323b"/>
+              <circle id="port-success-ring" cx="22" cy="27" r="22" fill="none" stroke="#2b7a52" stroke-width="3.5" opacity="0"/>
+              <g id="port-fail-spark" transform="translate(12, 27)" opacity="0">
+                <path d="M-10 -10 L-3 -3 M-12 2 L-4 2 M-9 12 L-2 6" stroke="#dc2626" stroke-width="2.8" stroke-linecap="round"/>
+              </g>
+            </g>
+
+            <!-- Flexible Cable Tail -->
+            <path id="cable-tail" d="M 320 386 Q 380 388, 438 378" fill="none" stroke="#334155" stroke-width="5.5" stroke-linecap="round"/>
+
+            <!-- Movable Male Connector (Center init) -->
+            <g id="connector" transform="translate(460, 376)">
+              <rect x="-18" y="-9" width="28" height="18" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+              <rect x="-8" y="-13" width="10" height="5" rx="1.5" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+              <rect x="10" y="-6" width="14" height="12" rx="2" fill="#94a3b8" stroke="#475569" stroke-width="1.5"/>
+            </g>
+
+            <!-- Robot Base Pedestal (Left side — arm operates cleanly in right half-plane with zero singularity!) -->
+            <g id="robot-base" transform="translate(230, 388)">
+              <rect x="-44" y="-12" width="88" height="14" rx="5" fill="#334155"/>
+              <path d="M-32 -12 L-24 -42 L24 -42 L32 -12 Z" fill="url(#arm-link)" stroke="#334155" stroke-width="2.5"/>
+              <circle cx="0" cy="-42" r="15" fill="#27323b"/>
+              <circle cx="0" cy="-42" r="7" fill="#94a3b8"/>
+            </g>
+
+            <g id="robot-arm">
+              <line id="arm-link-1" x1="230" y1="346" x2="340" y2="205" stroke="#334155" stroke-width="20" stroke-linecap="round"/>
+              <line id="arm-link-1-inner" x1="230" y1="346" x2="340" y2="205" stroke="#ffffff" stroke-width="14.5" stroke-linecap="round"/>
+              <line id="arm-link-2" x1="600" y1="215" x2="430" y2="265" stroke="#334155" stroke-width="16.5" stroke-linecap="round"/>
+              <line id="arm-link-2-inner" x1="600" y1="215" x2="430" y2="265" stroke="#f8fafc" stroke-width="11.5" stroke-linecap="round"/>
+              <circle id="arm-aura" cx="600" cy="215" r="16" fill="none" stroke="#64748b" stroke-width="3.5" opacity="0.85"/>
+              <circle id="joint-elbow" cx="600" cy="215" r="10.5" fill="#27323b"/>
+              <circle id="joint-elbow-dot" cx="600" cy="215" r="4.5" fill="#cbd5e1"/>
+              <g id="gripper-group" transform="translate(430, 265)">
+                <circle cx="0" cy="0" r="8.5" fill="#27323b"/>
+                <rect x="-12" y="4" width="24" height="11" rx="3" fill="#475569"/>
+                <rect id="finger-left" x="-14" y="15" width="5" height="22" rx="2" fill="#1e293b"/>
+                <rect id="finger-right" x="9" y="15" width="5" height="22" rx="2" fill="#1e293b"/>
+                <circle id="wrist-led" cx="0" cy="0" r="4" fill="#64748b"/>
+              </g>
+            </g>
+
+            <g id="callout-group" transform="translate(275, 132)" filter="url(#soft-shadow)">
+              <rect id="callout-bg" x="0" y="0" width="410" height="54" rx="13" fill="#ffffff" stroke="#64748b" stroke-width="2.2"/>
+              <text id="callout-tag" x="18" y="20" font-size="10" font-weight="800" fill="#475569" letter-spacing="0.8">PHASE 01 · GENERALIST VLA</text>
+              <text id="callout-msg" x="18" y="39" font-size="12.5" font-weight="600" fill="#1e293b">Approaching connector smoothly...</text>
+            </g>
+
+            <rect x="24" y="448" width="912" height="7" rx="3.5" fill="#8c6231" opacity="0.35"/>
+            <rect id="anim-progress-fill" x="24" y="448" width="0" height="7" rx="3.5" fill="#ffffff"/>
+          </svg>
+        </div>
+
+        <div class="stage-pills" role="group" aria-label="Jump to manipulation phase">
+          <button type="button" class="stage-pill is-current" data-stage="0"><span class="pill-step">01</span><span>Approach<small>Generalist VLA</small></span></button>
+          <button type="button" class="stage-pill" data-stage="1"><span class="pill-step">02</span><span>Pickup<small>Pickup RL</small></span></button>
+          <button type="button" class="stage-pill" data-stage="2"><span class="pill-step">03</span><span>Transit<small>Generalist VLA</small></span></button>
+          <button type="button" class="stage-pill" data-stage="3"><span class="pill-step">04</span><span>Insertion<small>Insertion RL</small></span></button>
+          <button type="button" class="stage-pill" data-stage="4"><span class="pill-step">05</span><span>Outcome<small>65.7% vs. 8.6%</small></span></button>
+        </div>
+      </div>
+
+      <details class="compact-details">
+        <summary>Read full abstract</summary>
+        <p class="abstract-body">Vision-language-action (VLA) models often struggle in the precision-critical phases of multi-stage manipulation tasks. To mitigate this issue, VLA models can be used in conjunction with reinforcement learning (RL) specialists that are specifically trained to handle the precision-critical phases. However, the coordination between the base VLA model and the RL specialists, which dictates when a specialist should take over from the base VLA and vice-versa, remains an open research question. In this paper, we address this gap by introducing RouteRLT, a modular framework that coordinates a generalist VLA, used as the default controller, with designated precision-critical RL specialists. At a high level, our framework trains a phase-aware coordination mechanism that handles handoffs between the generalist and the specialists. We evaluate RouteRLT on the LIBERO and LIBERO-Plus benchmarks, as well as on a physical connector pickup and insertion task. Overall, we find that RouteRLT improves success on LIBERO, and retains net gains on LIBERO-Plus. On the physical task, RouteRLT completes 65.7% of trials, compared with 8.6% for the baseline. Altogether, these results demonstrate that learned coordination builds on generalist VLA capabilities to improve task completion in precision-critical manipulation.</p>
+      </details>
+    </section>
+
+    <!-- 01 REAL-ROBOT EXECUTION -->
+    <section class="band-tint section-space" id="real-robot" aria-labelledby="real-title">
+      <div class="shell">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">01 / Real-Robot Hardware</p>
+            <h2 id="real-title">Autonomous connector pickup &amp; 1 mm insertion.</h2>
+          </div>
+          <p class="section-aside">Trossen Stationary AI · 1× speed</p>
+        </div>
+
+        <figure class="hero-video-wrap">
+          <div class="video-frame">
+            <video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/real_robot_poster.jpg" aria-label="Four-view real-robot demonstration of RouteRLT autonomously picking up a connector and inserting it into a 1 mm clearance port.">
+              <source src="assets/media/real_robot_demo.mp4" type="video/mp4">
+              Your browser does not support HTML5 video.
+            </video>
+          </div>
+          <figcaption>Trossen Stationary AI · 1× speed · Autonomous Generalist ↔ Pickup RL ↔ Insertion RL handoffs (1 mm port clearance).</figcaption>
+        </figure>
+
+        <div class="stats-row">
+          <div class="stat-pill"><div class="stat-val">65.7%</div><div class="stat-label">Full-task success (23/35 vs. 3/35 Base)</div></div><div class="stat-pill"><div class="stat-val">+57.1 pp</div><div class="stat-label">Over frozen SmolVLA (8.6%)</div></div><div class="stat-pill"><div class="stat-val">85.2%</div><div class="stat-label">Insertion given Pickup (23/27 vs. 3/20)</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 REPEATED & RE-ENTRANT CONTROL (REAL + SIM) -->
+    <section class="shell section-space" id="reentry" aria-labelledby="reentry-title">
+      <div class="section-heading horizontal">
+        <div>
+          <p class="eyebrow">02 / Re-entrant Control (Real &amp; Sim)</p>
+          <h2 id="reentry-title">Specialists re-enter whenever needed.</h2>
+        </div>
+        <p class="section-aside">No lockout after exit.</p>
+      </div>
+      <div class="video-grid">
+        <article class="video-card" id="video-real-reentry"><div class="tri-view-grid"><div class="tri-view-item"><video controls autoplay muted loop playsinline data-rate="2" preload="metadata" poster="assets/media/r13_017_top_poster.jpg" aria-label="Top camera view"><source src="assets/media/r13_017_top.mp4" type="video/mp4"></video><span class="view-tag">Top</span></div><div class="tri-view-item"><video controls autoplay muted loop playsinline data-rate="2" preload="metadata" poster="assets/media/r13_017_front_poster.jpg" aria-label="Front camera view"><source src="assets/media/r13_017_front.mp4" type="video/mp4"></video><span class="view-tag">Front</span></div><div class="tri-view-item"><video controls autoplay muted loop playsinline data-rate="2" preload="metadata" poster="assets/media/r13_017_wrist_poster.jpg" aria-label="Wrist camera view"><source src="assets/media/r13_017_wrist.mp4" type="video/mp4"></video><span class="view-tag">Wrist</span></div></div><div class="video-card-body"><span class="video-badge">Real Robot · Autonomous Re-entry (Trial 017)</span><h3>Re-entrant Pickup &amp; Insertion on Hardware</h3><p>Raw 3-camera recording (Top, Front, Wrist · 2× playback): Pickup RL autonomously re-enters after an initial attempt, hands back to Generalist, then Insertion RL seats the connector.</p></div></article><article class="video-card" id="video-sim-reentry"><video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/libero_reentry_poster.jpg" aria-label="Dual-camera LIBERO Long simulation video showing live BASE and PICKUP handoffs and re-entry after drop."><source src="assets/media/libero_long_reentry.mp4" type="video/mp4"></video><div class="video-card-body"><span class="video-badge">Simulation · LIBERO Long</span><h3>Multi-Object Reuse &amp; Drop Recovery</h3><p>Dual-camera replay showing live BASE ↔ PICKUP ownership: one Pickup specialist handles multiple objects and re-enters after a mid-task drop.</p></div></article>
+      </div>
+    </section>
+
+    <!-- 03 LIBERO-PLUS ROBUSTNESS COMPARISONS -->
+    <section class="band-tint section-space" id="libero-plus" aria-labelledby="plus-title">
+      <div class="shell">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">03 / LIBERO-Plus Robustness</p>
+            <h2 id="plus-title">Zero-shot gains under OOD perturbations.</h2>
+          </div>
+          <p class="section-aside">SmolVLA vs. SmolVLA + RouteRLT</p>
+        </div>
+        <div class="video-grid">
+          <article class="video-card" id="video-plus-bg"><div class="pair-compare-grid"><div class="pair-item"><video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/plus_bg_base_poster.jpg" aria-label="SmolVLA (Base)"><source src="assets/media/plus_bg_base.mp4" type="video/mp4"></video><span class="pair-tag tag-base">SmolVLA (Base)</span></div><div class="pair-item"><video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/plus_bg_method_poster.jpg" aria-label="SmolVLA + RouteRLT"><source src="assets/media/plus_bg_method.mp4" type="video/mp4"></video><span class="pair-tag tag-method">SmolVLA + RouteRLT</span></div></div><div class="video-card-body"><span class="video-badge">Background Textures · Zero Retraining</span><h3>LIBERO-Plus Long — Unseen Tabletop Texture</h3><p>Same Pickup specialist coordinates repeated pickups under unseen background textures.</p></div></article><article class="video-card" id="video-plus-light"><div class="pair-compare-grid"><div class="pair-item"><video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/plus_light_base_poster.jpg" aria-label="SmolVLA (Base)"><source src="assets/media/plus_light_base.mp4" type="video/mp4"></video><span class="pair-tag tag-base">SmolVLA (Base)</span></div><div class="pair-item"><video controls autoplay muted loop playsinline preload="metadata" poster="assets/media/plus_light_method_poster.jpg" aria-label="SmolVLA + RouteRLT"><source src="assets/media/plus_light_method.mp4" type="video/mp4"></video><span class="pair-tag tag-method">SmolVLA + RouteRLT</span></div></div><div class="video-card-body"><span class="video-badge">Lighting Conditions · Zero Retraining</span><h3>LIBERO-Plus Long — Lighting Shift</h3><p>Phase-aware handoffs remain reliable under strong lighting shifts without retraining.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 METHOD OVERVIEW -->
+    <section class="shell section-space" id="method" aria-labelledby="method-title">
+      <div class="section-heading horizontal">
+        <div>
+          <p class="eyebrow">04 / Architecture</p>
+          <h2 id="method-title">How RouteRLT works.</h2>
+        </div>
+        <a class="text-link" href="https://arxiv.org/pdf/2609.26467" target="_blank" rel="noopener">Full formulation in PDF ↗</a>
+      </div>
+      <figure class="media-card">
+        <img src="assets/media/routerlt_overview.png" alt="RouteRLT architecture: frozen VLA backbone, RLT readout adapter, GRU phase selector, re-entrant stabilizer, controller bank, and immediate action-boundary flush." loading="lazy" decoding="async">
+        <figcaption>Frozen VLA + compact readout adapter → GRU phase selector &amp; re-entrant stabilizer → immediate action-queue flush on switch.</figcaption>
+      </figure>
+    </section>
+
+    <!-- 05 KEY RESULTS -->
+    <section class="band-tint section-space" id="results" aria-labelledby="results-title">
+      <div class="shell">
+        <div class="section-heading horizontal">
+          <div>
+            <p class="eyebrow">05 / Key Results</p>
+            <h2 id="results-title">Real hardware, LIBERO &amp; LIBERO-Plus.</h2>
+          </div>
+          <p class="section-aside">Matched episodes · zero retraining on Plus</p>
+        </div>
+
+        <figure class="media-card results-chart-card">
+          <img src="assets/media/hardware_results.png" alt="Real-robot success rates and cumulative completion curves over 60 seconds comparing SmolVLA and SmolVLA + RouteRLT." loading="lazy" decoding="async">
+          <figcaption>Physical connector pickup &amp; insertion over 35 trials (60 s budget): 65.7% vs. 8.6% overall, and 14 vs. 2 completed within 30 s.</figcaption>
+        </figure>
+
+        <div class="key-table-block">
+          <div class="results-table-wrap"><table class="results-table"><thead><tr><th scope="col">Benchmark (SmolVLA)</th><th scope="col">Specialists</th><th scope="col">Episodes</th><th scope="col">Base SR</th><th scope="col">RouteRLT SR</th><th scope="col">ΔS2S</th><th scope="col">Rec. / Reg.</th></tr></thead><tbody><tr><td>LIBERO Object</td><td>Pickup</td><td>100</td><td>93.00%</td><td><strong>98.00%</strong></td><td>-1.51</td><td>5 / 0</td></tr><tr><td>LIBERO Long</td><td>Pickup (reused)</td><td>30</td><td>56.67%</td><td><strong>70.00%</strong></td><td>-10.38</td><td>5 / 1</td></tr><tr><td>LIBERO Spatial</td><td>Pickup + Place</td><td>100</td><td>91.00%</td><td><strong>94.00%</strong></td><td>+1.62</td><td>3 / 0</td></tr><tr><td>LIBERO-Plus Object</td><td>Pickup (0-shot)</td><td>2,357</td><td>44.17%</td><td><strong>47.94%</strong></td><td>-1.77</td><td>226 / 137</td></tr><tr><td>LIBERO-Plus Long</td><td>Pickup (0-shot)</td><td>570</td><td>21.40%</td><td><strong>25.44%</strong></td><td>-6.10</td><td>41 / 18</td></tr><tr><td>LIBERO-Plus Spatial</td><td>Pickup + Place (0-shot)</td><td>2,274</td><td>40.24%</td><td><strong>43.76%</strong></td><td>-2.25</td><td>172 / 92</td></tr></tbody></table></div>
+        </div>
+
+        <details class="compact-details">
+          <summary>More tables: 5 VLA backbones &amp; ablations</summary>
+          <div class="extra-tables">
+            <h3>Five Frozen VLA Backbones (LIBERO Object &amp; Long)</h3>
+            <div class="results-table-wrap"><table class="results-table"><thead><tr><th scope="col">Backbone (d_b / C)</th><th scope="col">Suite</th><th scope="col">Base SR</th><th scope="col">RouteRLT SR</th><th scope="col">ΔS2S</th><th scope="col">Rec. / Reg.</th></tr></thead><tbody><tr><td>SmolVLA (960 / 10)</td><td>Object / Long</td><td>93.0 / 56.7%</td><td><strong>98.0 / 70.0%</strong></td><td>-1.51 / -10.38</td><td>5/0 · 5/1</td></tr><tr><td>X-VLA (1024 / 30)</td><td>Object / Long</td><td>99.0 / <strong>86.7%</strong></td><td><strong>100.0</strong> / 83.3%</td><td>+4.23 / +10.83</td><td>1/0 · 2/3</td></tr><tr><td>π₀ (2048 / 5)</td><td>Object / Long</td><td>97.0 / <strong>93.3%</strong></td><td><strong>99.0</strong> / 90.0%</td><td>-0.40 / +5.44</td><td>2/0 · 2/3</td></tr><tr><td>VLA-JEPA (2048 / 7)</td><td>Object / Long</td><td><strong>100.0 / 100.0%</strong></td><td><strong>100.0 / 100.0%</strong></td><td>-1.56 / +1.24</td><td>0/0 · 0/0</td></tr><tr><td>OpenVLA-OFTₘ (4096 / 8)</td><td>Object / Long</td><td>97.0 / <strong>96.7%</strong></td><td><strong>99.0 / 96.7%</strong></td><td>+0.38 / -0.38</td><td>2/0 · 0/0</td></tr></tbody></table></div>
+            <h3>Key Ablations (SmolVLA Object + Long, 130 episodes)</h3>
+            <div class="results-table-wrap"><table class="results-table"><thead><tr><th scope="col">Variant (SmolVLA Object + Long)</th><th scope="col">Combined SR</th><th scope="col">ΔS2S</th><th scope="col">Rec. / Reg.</th></tr></thead><tbody><tr><td>SmolVLA Base</td><td>84.62%</td><td>—</td><td>—</td></tr><tr><td><strong>RouteRLT (GRU + immediate flush + image &amp; lang)</strong></td><td><strong>91.54%</strong></td><td>-3.55</td><td>10 / 1</td></tr><tr><td>Rule-window (privileged geometry)</td><td>86.92%</td><td>-0.78</td><td>8 / 5</td></tr><tr><td>Chunk-boundary handoff (deferred)</td><td>86.15%</td><td>-3.31</td><td>6 / 4</td></tr><tr><td>Image-only representation (no language tokens)</td><td>85.38%</td><td>-0.22</td><td>7 / 6</td></tr></tbody></table></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 06 CITATION -->
+    <section class="citation-section" id="citation" aria-labelledby="citation-title">
+      <div class="shell citation-grid">
+        <div>
+          <p class="eyebrow">06 / Citation</p>
+          <h2 id="citation-title">BibTeX</h2>
+          <a class="text-link" href="https://arxiv.org/abs/2609.26467" target="_blank" rel="noopener">View on arXiv ↗</a>
+        </div>
+        <div class="citation-box">
+          <div class="citation-bar">
+            <span>arXiv:2609.26467</span>
+            <button type="button" id="copy-citation">Copy</button>
+            <span id="copy-status" class="sr-only" role="status" aria-live="polite"></span>
+          </div>
+          <pre><code id="bibtex">@misc{zhu2026routerlt,
+  title = {Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation},
+  author = {Chongyu Zhu and Hyegang Kim and Jaden Hinds and Juan Sebastian Rojas and Ramy Elmallah and Chi-Guhn Lee},
+  year = {2026},
+  eprint = {2609.26467},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.RO},
+  url = {https://arxiv.org/abs/2609.26467}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell">
+    <a class="wordmark" href="#top">RouteRLT<span class="wordmark-dot">.</span></a>
+    <p>University of Toronto · DORL Lab</p>
+    <div>
+      <a href="https://chongyuzhu.com/">Chongyu Zhu ↗</a>
+      <a href="https://arxiv.org/abs/2609.26467" target="_blank" rel="noopener">arXiv:2609.26467 ↗</a>
+    </div>
+  </footer>
+
+  <noscript>
+    <style>
+      #copy-citation, .playback-controls, .mode-switch, .stage-pills { display: none; }
+    </style>
+  </noscript>
+</body>
+</html>
