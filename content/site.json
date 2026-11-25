@@ -9,7 +9,7 @@
     {"name": "Hyegang Kim", "url": "https://scholar.google.com/citations?user=_ZH58tUAAAAJ&hl=en"},
     {"name": "Jaden Hinds", "url": "https://scholar.google.com/citations?user=9BpkYWYAAAAJ&hl=en"},
     {"name": "Juan Sebastian Rojas", "url": "https://scholar.google.com/citations?user=jrWXzhMAAAAJ&hl=en"},
-    {"name": "Ramy Elmallah", "url": "https://scholar.google.com/citations?user=34LmEvEAAAAJ&hl=en"},
+    {"name": "Ramy ElMallah", "url": "https://scholar.google.com/citations?user=34LmEvEAAAAJ&hl=en"},
     {"name": "Chi-Guhn Lee", "url": "https://scholar.google.com/citations?user=ZpALG2AAAAAJ&hl=en"}
   ],
   "affiliations": [
@@ -114,5 +114,5 @@
       ]
     }
   },
-  "bibtex": "@misc{zhu2026routerlt,\n  title = {Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation},\n  author = {Chongyu Zhu and Hyegang Kim and Jaden Hinds and Juan Sebastian Rojas and Ramy Elmallah and Chi-Guhn Lee},\n  year = {2026},\n  eprint = {2609.26467},\n  archivePrefix = {arXiv},\n  primaryClass = {cs.RO},\n  url = {https://arxiv.org/abs/2609.26467}\n}"
+  "bibtex": "@misc{zhu2026routerlt,\n  title = {Generalists Act, Specialists Intervene: Modular Stage-Selective Reinforcement Learning for Vision-Language-Action Manipulation},\n  author = {Chongyu Zhu and Hyegang Kim and Jaden Hinds and Juan Sebastian Rojas and Ramy ElMallah and Chi-Guhn Lee},\n  year = {2026},\n  eprint = {2609.26467},\n  archivePrefix = {arXiv},\n  primaryClass = {cs.RO},\n  url = {https://arxiv.org/abs/2609.26467}\n}"
 }
